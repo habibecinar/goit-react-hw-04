@@ -1,9 +1,9 @@
 function LoadMore({ onLoadMore, disabled }) {
   return (
     <div style={{ textAlign: "center", margin: "20px 0" }}>
-      <button 
-        onClick={onLoadMore} 
-        disabled={disabled} 
+      <button
+        onClick={onLoadMore}
+        disabled={disabled}
         style={{
           padding: "10px 20px",
           fontSize: "16px",
@@ -11,9 +11,10 @@ function LoadMore({ onLoadMore, disabled }) {
           opacity: disabled ? 0.5 : 1,
           borderRadius: "5px",
           border: "none",
-          backgroundColor: "#007bff",
+          backgroundColor: "#ac8fcd",
           color: "white",
-          transition: "background-color 0.3s ease"
+          transition: "background-color 0.3s ease",
+          
         }}
       >
         Load More

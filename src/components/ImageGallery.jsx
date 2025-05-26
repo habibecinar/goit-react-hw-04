@@ -1,6 +1,6 @@
 import ImageCard from "./ImageCard";
 
-function ImageGallery({ photo }) {
+function ImageGallery({ photo,onImageClick }) {
     if (!photo || photo.length === 0) {
         return null; // Görüntülenecek bir şey yoksa hiçbir şey gösterme
     }
@@ -8,7 +8,7 @@ function ImageGallery({ photo }) {
       <ul className="image-gallery">
         {photo.map((photo) => (
           <li key={photo.id}>
-          <ImageCard photo={photo} />
+            <ImageCard photo={photo} onImageClick={onImageClick} />
           </li>
         ))}
       </ul>

@@ -14,9 +14,18 @@ body {
 .app-container {
   display: flex;
   flex-direction: column;
+
+  display: flex;
+  justify-content: center; /* veya space-between/space-around */
+  align-items: center;
+  width: 100%;
+ 
+  box-sizing: border-box;
+}
+
   
  
-}
+
 
 .image-gallery{
   display: flex;
@@ -62,7 +71,9 @@ padding: 32px;
  justify-content: center;
  align-items: center;
  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
+  width: 100%;
+ box-sizing: border-box;
+ 
 }
 form{
   display: flex;
@@ -101,6 +112,39 @@ ul {
   padding: 0;
   margin: 0;
 }
+/* Arka planı karartan overlay */
+.overlay {
+  background-color: rgba(0, 0, 0, 0.75);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal içeriği */
+.modal {
+ 
+  padding: 20px;
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 12px;
+  outline: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Görselin kendisi */
+.modal-image {
+  max-width: 100%;
+  max-height: 80vh;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
 @media (max-width: 600px) {
   .image-gallery {
     justify-content: center;

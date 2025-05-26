@@ -6,6 +6,7 @@ import { Toaster, toast } from "react-hot-toast";
 import Loader from "./components/Loader";
 import LoadMore from "./components/LoadMoreBtn";
 import ErrorMessage from "./components/ErrorMessage";
+import ImageModal from "./components/ImageModal";
 
 function App() {
   const [results, setResults] = useState([]);
@@ -13,7 +14,19 @@ function App() {
   const [hasError, setHasError] = useState(false);
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  
 
+const [isModalOpen, setIsModalOpen] = useState(false);
+const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setIsModalOpen(true);
+  };
+   const closeModal = () => {
+     setIsModalOpen(false);
+     setSelectedImage(null);
+   };
   const fetchPhotos = async (term, pageNum) => {
     setIsLoading(true);
     try {
@@ -64,9 +77,20 @@ function App() {
       <SearchBar onSubmit={handleSearch} />
       <Toaster />
       {isLoading && <Loader loading={isLoading} />}
-      {hasError ? <ErrorMessage /> : <ImageGallery photo={results} />}
+      {hasError ? (
+        <ErrorMessage />
+      ) : (
+        <ImageGallery photo={results} onImageClick={handleImageClick} />
+      )}
       {results.length > 0 && !isLoading && (
         <LoadMore onLoadMore={handleLoadMore} />
+      )}
+      {isModalOpen && (
+        <ImageModal
+          isOpen={isModalOpen}
+          image={selectedImage}
+          onRequestClose={closeModal}
+        />
       )}
     </div>
   );
