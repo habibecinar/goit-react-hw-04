@@ -1,35 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import SearchBar from "./components/SearchBar";
+import ImageGallery from "./components/ImageGallery";
+import { Toaster, toast } from "react-hot-toast";
+import Loader from "./components/Loader";
+import LoadMore from "./components/LoadMoreBtn";
+import ErrorMessage from "./components/ErrorMessage";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const fetchPhotos = async (term, pageNum) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://api.unsplash.com/search/photos?query=${term}&page=${pageNum}&per_page=9&client_id=DWAcyp6n8j4-h3eYJRuQQK8c65lOlqVrYrp1cte21G8`
+      );
+      const data = await response.json();
+      if (data.results.length === 0) {
+        if (pageNum === 1) {
+          toast.error("Sonuç bulunamadı. Lütfen başka bir kelime deneyin.");
+          setResults([]);
+        }
+        return;
+      }
+      if (pageNum === 1) {
+        setResults(data.results); // Yeni arama, önceki sonuçları sil
+      } else {
+        setResults((prev) => [...prev, ...data.results]); // Sayfa arttırma, sonuçları ekle
+      }
+      setHasError(false);
+    } catch (error) {
+      toast.error("Görseller alınırken hata oluştu");
+      setHasError(true);
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSearch = (term) => {
+    if (!term.trim()) {
+      toast.error("Lütfen bir kelime girin");
+      return;
+    }
+    setSearchTerm(term);
+    setPage(1);
+    fetchPhotos(term, 1);
+  };
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchPhotos(searchTerm, nextPage);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app-container">
+      <SearchBar onSubmit={handleSearch} />
+      <Toaster />
+      {isLoading && <Loader loading={isLoading} />}
+      {hasError ? <ErrorMessage /> : <ImageGallery photo={results} />}
+      {results.length > 0 && !isLoading && (
+        <LoadMore onLoadMore={handleLoadMore} />
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
